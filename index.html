@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Gallery with Theme Toggle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --accent-color: #ff6b6b;
+            --transition-speed: 0.4s;
+        }
+
+        .dark-theme {
+            --primary-color: #6d98ba;
+            --secondary-color: #4a7ca5;
+            --text-color: #f0f0f0;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --accent-color: #ff8585;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--shadow-color);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        h1:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 30px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: all var(--transition-speed);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color);
+            color: var(--card-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px var(--shadow-color);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+        }
+
+        .gallery-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            width: 320px;
+            box-shadow: 0 10px 20px var(--shadow-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cardFadeIn 0.8s ease-out forwards;
+        }
+
+        .product-card:nth-child(1) { animation-delay: 0.2s; }
+        .product-card:nth-child(2) { animation-delay: 0.4s; }
+        .product-card:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes cardFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px var(--shadow-color);
+        }
+
+        .product-image {
+            height: 220px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .product-content {
+            padding: 25px;
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .product-description {
+            color: var(--text-color);
+            opacity: 0.9;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .product-features {
+            list-style-type: none;
+            margin-bottom: 20px;
+        }
+
+        .product-features li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-features li i {
+            color: var(--accent-color);
+            margin-right: 10px;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-to-cart {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-speed);
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .wishlist {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed);
+        }
+
+        .wishlist:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--shadow-color);
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1100px) {
+            .gallery-container {
+                gap: 20px;
+            }
+            
+            .product-card {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .gallery-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .product-card {
+                width: 90%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .product-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Premium Product Gallery</h1>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+                <span>Dark Mode</span>
+            </button>
+        </header>
+
+        <main>
+            <div class="gallery-container">
+                <!-- Product Card 1 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Wireless Headphones">
+                        <div class="product-badge">Best Seller</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Noise-Canceling Headphones</h3>
+                        <p class="product-description">Premium wireless headphones with active noise cancellation.</p>
+                        <div class="product-price">$249.99</div>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check"></i> Active Noise Cancellation</li>
+                            <li><i class="fas fa-check"></i> 30-hour battery life</li>
+                            <li><i class="fas fa-check"></i> Touch controls</li>
+                            <li><i class="fas fa-check"></i> Voice assistant support</li>
+                        </ul>
+                        <div class="product-actions">
+                            <button class="add-to-cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80" alt="Smart Watch">
+                        <div class="product-badge">New</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">New Gen Fitness Smartwatch</h3>
+                        <p class="product-description">Advanced smartwatch with health monitoring, GPS, and 7-day battery life.</p>
+                        <div class="product-price">$199.99</div>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check"></i> Heart rate monitor</li>
+                            <li><i class="fas fa-check"></i> GPS tracking</li>
+                            <li><i class="fas fa-check"></i> Water resistant</li>
+                            <li><i class="fas fa-check"></i> Sleep tracking</li>
+                        </ul>
+                        <div class="product-actions">
+                            <button class="add-to-cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80" alt="Bluetooth Speaker">
+                        <div class="product-badge">Sale</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Portable Bluetooth Speaker</h3>
+                        <p class="product-description">Waterproof portable speaker with 360° sound and 20-hour battery life.</p>
+                        <div class="product-price">$129.99</div>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check"></i> 360° sound</li>
+                            <li><i class="fas fa-check"></i> IP67 waterproof</li>
+                            <li><i class="fas fa-check"></i> 20-hour battery</li>
+                            <li><i class="fas fa-check"></i> Party mode</li>
+                        </ul>
+                        <div class="product-actions">
+                            <button class="add-to-cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Interactive Product Gallery &copy; 2023 | Hover over cards for effects | Click theme toggle to switch between light and dark modes</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const themeText = themeToggle.querySelector('span');
+        
+        // Check for saved theme or prefer-color-scheme
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            document.body.classList.add('dark-theme');
+            themeIcon.className = 'fas fa-sun';
+            themeText.textContent = 'Light Mode';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Add to Cart Button Interactions
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                const productTitle = this.closest('.product-card').querySelector('.product-title').textContent;
+                
+                // Change button text and icon temporarily
+                this.innerHTML = '<i class="fas fa-check"></i> Added!';
+                this.style.backgroundColor = 'var(--accent-color)';
+                
+                // Show a simple alert (in a real app, this would update a cart)
+                setTimeout(() => {
+                    alert(`"${productTitle}" added to cart!`);
+                }, 300);
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.style.backgroundColor = '';
+                }, 2000);
+            });
+        });
+        
+        // Wishlist Button Interactions
+        const wishlistButtons = document.querySelectorAll('.wishlist');
+        wishlistButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                const productTitle = this.closest('.product-card').querySelector('.product-title').textContent;
+                
+                // Toggle between regular heart and solid heart
+                if (icon.classList.contains('far')) {
+                    icon.className = 'fas fa-heart';
+                    this.style.backgroundColor = 'var(--accent-color)';
+                    this.style.borderColor = 'var(--accent-color)';
+                    alert(`"${productTitle}" added to wishlist!`);
+                } else {
+                    icon.className = 'far fa-heart';
+                    this.style.backgroundColor = '';
+                    this.style.borderColor = 'var(--primary-color)';
+                    alert(`"${productTitle}" removed from wishlist!`);
+                }
+            });
+        });
+        
+        // Initialize cards with staggered animation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cards are animated via CSS with animation-delay
+            // No additional JS needed for fade-in animations
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
